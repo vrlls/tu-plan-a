@@ -19,7 +19,7 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'POST /create' do
-    subject(:post_user) { post api_v1_users_path(user_params) }
+    subject(:post_user) { post api_signup_path(user_params) }
 
     let(:user_params) { { 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456' } }
 
