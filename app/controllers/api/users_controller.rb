@@ -35,9 +35,7 @@ module Api
     end
 
     # DELETE /users/1
-    def destroy
-      set_user.destroy
-    end
+    delegate :destroy, to: :set_user
 
     private
 
