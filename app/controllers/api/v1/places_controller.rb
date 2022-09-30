@@ -17,6 +17,7 @@ module Api
 
       def create
         new_place = Place.new(place_params)
+        new_place.images.attach(place_params[:images])
 
         if new_place.save
           render json: place_serializer(new_place), status: :created
@@ -52,7 +53,7 @@ module Api
       end
 
       def place_params
-        params.require(:place).permit(:name, :description, :address, :category_id)
+        params.require(:place).permit(:name, :description, :address, :category_id, :images)
       end
 
       def place_serializer(data)

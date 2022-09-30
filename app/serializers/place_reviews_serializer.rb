@@ -3,5 +3,7 @@
 class PlaceReviewsSerializer
   include JSONAPI::Serializer
   set_type :review
-  attributes :title, :comment, :score, :user, :place
+  attributes :title, :comment, :score
+  belongs_to :user
+  belongs_to :place
 end
