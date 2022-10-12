@@ -81,6 +81,8 @@ test:
 #
 production:
   <<: *default
-  database: tu_plan_a_production
-  username: tu_plan_a
-  password: <%= ENV['TU_PLAN_A_DATABASE_PASSWORD'] %>
+  database: <%= ENV['DATABASE'] %>
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASS'] %>
+  host: <%= ENV['DATABASE_HOST'] %>
+  port: <%= ENV['DATABASE_PORT'].to_i %>
