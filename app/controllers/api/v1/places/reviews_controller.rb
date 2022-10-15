@@ -4,7 +4,7 @@ module Api
   module V1
     module Places
       class ReviewsController < ApplicationController
-        # before_action :authenticate_user, only: %i[update create destroy]
+        before_action :authenticate_user, only: %i[update create destroy]
         before_action :place
 
         def index
@@ -65,10 +65,6 @@ module Api
 
         def place
           Place.find(params[:place_id])
-        end
-
-        def place_reviews_serializer(data)
-          PlaceReviewsSerializer.new(data).serializable_hash.to_json
         end
 
         def review_params
