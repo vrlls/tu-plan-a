@@ -19,10 +19,6 @@ module Api
         def category
           Category.find(params[:category_id])
         end
-
-        def category_places_serializer(data)
-          CategoryPlacesSerializer.new(data).serializable_hash.to_json
-        end
       end
     end
   end
