@@ -16,7 +16,9 @@ Rails.application.routes.draw do
         resources :reviews, controller: "places/reviews"
       end
 
-      resources :users, except: [:create]
+      resources :users, except: [:create] do
+        resources :favorites, only: [:index, :create, :destroy], controller: "users/favorites"
+      end
 
       resources :reviews, only: [:index]
     end
