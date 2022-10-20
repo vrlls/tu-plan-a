@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  class ApplicationController < ActionController::API
+  class ApiController < ActionController::API
     include Knock::Authenticable
 
     def place_serializer(data)

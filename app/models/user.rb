@@ -2,7 +2,7 @@
 
 class User < ApplicationRecord
   has_secure_password
-  has_many :favorites
+  has_many :favorites, dependent: :destroy
   has_many :places, through: :favorites
   validates :username, presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze

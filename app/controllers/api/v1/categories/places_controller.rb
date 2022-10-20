@@ -3,7 +3,7 @@
 module Api
   module V1
     module Categories
-      class PlacesController < ApplicationController
+      class PlacesController < ApiController
         before_action :category
 
         def index

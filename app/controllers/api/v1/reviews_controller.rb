@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class ReviewsController < ApplicationController
+    class ReviewsController < ApiController
       before_action :authenticate_user
       before_action :user
 
@@ -10,12 +10,12 @@ module Api
         if reviews.any?
           render json: place_reviews_serializer(reviews), status: :ok
         else
-          render json: {response: "Yo don't have any review yet"}, status: :ok
+          render json: { response: "Yo don't have any review yet" }, status: :ok
         end
       end
 
       private
-      
+
       def reviews
         Review.where(user: current_user)
       end
