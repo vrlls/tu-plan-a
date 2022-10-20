@@ -3,7 +3,7 @@
 module Api
   module V1
     module Places
-      class ReviewsController < ApplicationController
+      class ReviewsController < ApiController
         before_action :authenticate_user, only: %i[update create destroy]
         before_action :place
 

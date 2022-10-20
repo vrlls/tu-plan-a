@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class CategoriesController < ApplicationController
+    class CategoriesController < ApiController
       def index
         render json: category_serializer(categories), status: :ok
       end

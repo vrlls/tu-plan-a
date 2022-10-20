@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe 'Users::Favorites', type: :request do
   def authenticated_header(user)
     token = Knock::AuthToken.new(payload: { sub: user.id }).token
-    { 'Authorization': "Bearer #{token}" }
+    { Authorization: "Bearer #{token}" }
   end
-  
+
   describe 'GET /index' do
     subject(:get_favorite_places) { get api_v1_user_favorites_path(user), headers: authenticated_header(user) }
 
@@ -29,7 +29,7 @@ RSpec.describe 'Users::Favorites', type: :request do
 
     let(:user) { create(:user) }
     let(:place) { create(:place) }
-    let(:favorite_params) { { favorite: { place_id: place.id} } }
+    let(:favorite_params) { { favorite: { place_id: place.id } } }
 
     it { expect { post_favorite_places }.to change(Favorite, :count).by(1) }
   end

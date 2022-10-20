@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class PlacesController < ApplicationController
+    class PlacesController < ApiController
       def index
         render json: place_serializer(places), status: :ok
       end
