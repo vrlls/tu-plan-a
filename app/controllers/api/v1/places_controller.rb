@@ -2,7 +2,13 @@
 
 module Api
   module V1
-    class PlacesController < ApiController
+    class PlacesController < ApplicationController
+      rescue_from ApiExceptions::BaseException, 
+      :with => :render_error_response
+
+      before_action :authenticate_user, only: [:create, :edit, :update, :destory]
+      before_action :is_editor?, only: [:create, :edit, :update, :destory]
+
       def index
         render json: place_serializer(places), status: :ok
       end
@@ -52,13 +58,19 @@ module Api
         Place.find(params[:id])
       end
 
+      def is_editor?
+        unless current_user.has_role? :editor || :admin
+          raise ApiExceptions::PlaceError::InsufficientPermitsError.new
+        end
+      end
+
       def place_params
         params.require(:place).permit(:name, :description, :address, :category_id, :images)
       end
 
-      def place_serializer(data)
-        PlaceSerializer.new(data).serializable_hash.to_json
-      end
+      def render_error_response(error)
+        render json: {status: error.status, code: error.code, message: error.message}, status: error.code
+      end 
     end
   end
 end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Api
-  class UsersController < ApiController
-    # before_action :authenticate_user, except: [:create]
+  class UsersController < ApplicationController
+    before_action :authenticate_user, except: [:create]
     before_action :set_user, only: %i[show update destroy]
 
     # GET /users
@@ -27,6 +27,7 @@ module Api
 
     # PATCH/PUT /users/1
     def update
+      binding.pry
       if set_user.update(user_params)
         render json: user_serializer(set_user), status: :ok
       else
@@ -50,7 +51,7 @@ module Api
 
       # Only allow a list of trusted parameters through.
       def user_params
-        params.permit(:username, :email, :password, :password_confirmation)
+        params.require(:user).permit(:username, :email, :password, :password_confirmation, {role_ids: []})
       end
 
       def user_serializer(data)
