@@ -8,13 +8,4 @@ class Place < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { case_sensitive: true }
   validates :address, presence: true, uniqueness: { case_sensitive: true }
-
-  after_create :set_creator
-  after_commit :calculate_score
-
-  private
-
-  def set_creator
-    current_user.add_role :creator, self
-  end
 end

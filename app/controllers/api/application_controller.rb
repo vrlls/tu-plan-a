@@ -23,5 +23,9 @@ module Api
     def category_places_serializer(data)
       CategoryPlacesSerializer.new(data).serializable_hash.to_json
     end
+
+    def render_error_response(error)
+      render json: { status: error.status, code: error.code, message: error.message }, status: error.code
+    end
   end
 end

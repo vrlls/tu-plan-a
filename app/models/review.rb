@@ -10,11 +10,10 @@ class Review < ApplicationRecord
   validates :score, presence: true
 
   after_commit :calculate_score
-  
+
   private
 
   def calculate_score
-    binding.pry
-    PlaceManager::ScoreCalculator.call(self.place.id)
+    PlaceManager::ScoreCalculator.call(place.id)
   end
 end

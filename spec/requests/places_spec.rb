@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Places', type: :request do
+  def authenticated_header(user)
+    token = Knock::AuthToken.new(payload: { sub: user.id }).token
+    { Authorization: "Bearer #{token}" }
+  end
+
   describe 'GET /index' do
     subject(:get_places) { get api_v1_places_path }
 
@@ -19,8 +24,9 @@ RSpec.describe 'Places', type: :request do
   end
 
   describe 'POST /create' do
-    subject(:post_place) { post api_v1_places_path(place_params) }
+    subject(:post_place) { post api_v1_places_path(place_params), headers: authenticated_header(user) }
 
+    let!(:user) { create(:editor) }
     let(:category) { create(:category) }
     let(:place_params) { { 'place' => { 'name' => 'Test', 'address' => '282 Kevin Brook, Imogeneborough, CA 58517', 'description' => 'Test description', 'category_id' => category } } }
 
@@ -40,10 +46,11 @@ RSpec.describe 'Places', type: :request do
 
   describe 'DELETE /destroy' do
     let(:place) { create(:place) }
+    let!(:user) { create(:editor) }
 
     before do
       place
-      delete api_v1_place_path(place.id)
+      delete api_v1_place_path(place.id), headers: authenticated_header(user)
     end
 
     it { expect(response).to have_http_status(:no_content) }
@@ -52,10 +59,11 @@ RSpec.describe 'Places', type: :request do
   describe 'PUT /update' do
     let(:place) { create(:place) }
     let(:place_params) { { 'place' => { 'name' => 'New name' } } }
+    let!(:user) { create(:editor) }
 
     before do
       place
-      put api_v1_place_path(place.id, place_params)
+      put api_v1_place_path(place.id, place_params), headers: authenticated_header(user)
     end
 
     it { expect(response).to have_http_status(:ok) }
