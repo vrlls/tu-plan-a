@@ -31,7 +31,7 @@ module Api
 
     # PATCH/PUT /users/1
     def update
-      raise ApiExceptions::PlaceError::InsufficientPermitsError unless current_user == set_user
+      raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user == set_user
 
       if set_user.update(user_params)
         render json: user_serializer(set_user), status: :ok
@@ -61,7 +61,7 @@ module Api
     end
 
     def admin?
-      raise ApiExceptions::PlaceError::InsufficientPermitsError unless current_user.has_role? :admin
+      raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user.has_role? :admin
     end
   end
 end
