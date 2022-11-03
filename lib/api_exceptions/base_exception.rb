@@ -6,8 +6,8 @@ module ApiExceptions
 
     ERROR_DESCRIPTION = proc { |code, message| { status: 'error | failure', code: code, message: message } }
     ERROR_CODE_MAP = {
-      'PlaceError::InsufficientPermitsError' =>
-        ERROR_DESCRIPTION.call(401, 'You must be admin or editor for execute this action')
+      'PermitError::InsufficientPermitsError' =>
+        ERROR_DESCRIPTION.call(401, 'You do not have the required role for this action')
     }.freeze
 
     def initialize

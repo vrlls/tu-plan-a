@@ -60,7 +60,7 @@ module Api
       end
 
       def editor?
-        raise ApiExceptions::PlaceError::InsufficientPermitsError unless current_user.has_role?(:editor || :admin)
+        raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user.has_role?(:editor || :admin)
       end
 
       def place_params
