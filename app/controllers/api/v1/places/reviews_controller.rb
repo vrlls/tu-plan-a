@@ -44,7 +44,6 @@ module Api
         end
 
         def destroy
-            place = review.place.id
             review.destroy if valid_editor?
             render json: { error: 'You cant detroy another users reviews' }, status: :no_content
         rescue
@@ -55,6 +54,7 @@ module Api
 
         def valid_editor?
           return true if review.user == current_user
+
           current_user.has_role? :moderator
         end
 
