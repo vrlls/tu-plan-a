@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Categories', type: :request do
+  def authenticated_header(user)
+    token = Knock::AuthToken.new(payload: { sub: user.id }).token
+    { Authorization: "Bearer #{token}" }
+  end
+
   describe 'GET /index' do
     subject(:get_categories) { get api_v1_categories_path }
 
@@ -19,8 +24,9 @@ RSpec.describe 'Categories', type: :request do
   end
 
   describe 'POST /create' do
-    subject(:post_category) { post api_v1_categories_path(category_params) }
+    subject(:post_category) { post api_v1_categories_path(category_params), headers: authenticated_header(user) }
 
+    let!(:user) { create(:user) }
     let(:category_params) { { 'categories' => { 'name' => 'Test' } } }
 
     it { expect { post_category }.to change(Category, :count).by(1) }

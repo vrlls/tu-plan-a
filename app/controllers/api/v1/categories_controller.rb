@@ -2,7 +2,9 @@
 
 module Api
   module V1
-    class CategoriesController < ApiController
+    class CategoriesController < ApplicationController
+      before_action :authenticate_user, only: :create
+
       def index
         render json: category_serializer(categories), status: :ok
       end
@@ -33,10 +35,6 @@ module Api
 
       def category
         Category.find(params[:id])
-      end
-
-      def category_serializer(categories)
-        CategorySerializer.new(categories).serializable_hash.to_json
       end
     end
   end

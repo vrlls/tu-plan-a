@@ -70,7 +70,7 @@ RSpec.describe 'Places::Reviews', type: :request do
   describe 'DELETE /destroy' do
     subject(:destroy_review) {}
 
-    let!(:user) { create(:user) }
+    let!(:user) { create(:moderator) }
     let!(:place) { create(:place) }
     let(:review) { create(:review, place: place, user: user) }
 
