@@ -27,7 +27,7 @@ RSpec.describe 'Users', type: :request do
   describe 'POST /create' do
     subject(:post_user) { post api_signup_path(user_params) }
 
-    let(:user_params) { { 'user' => { 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456' } } }
+    let(:user_params) { { 'user' => { 'name' => 'Testname', 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456' } } }
 
     it { expect { post_user }.to change(User, :count).by(1) }
   end

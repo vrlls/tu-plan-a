@@ -31,6 +31,11 @@ RSpec.describe 'Places', type: :request do
     let(:place_params) { { 'place' => { 'name' => 'Test', 'address' => '282 Kevin Brook, Imogeneborough, CA 58517', 'description' => 'Test description', 'category_id' => category } } }
 
     it { expect { post_place }.to change(Place, :count).by(1) }
+
+    it 'Role creator added' do
+      post_place
+      expect(user.roles.pluck(:name)).to be_truthy
+    end
   end
 
   describe 'GET /show' do

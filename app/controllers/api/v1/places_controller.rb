@@ -60,7 +60,8 @@ module Api
       end
 
       def editor?
-        raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user.has_role?(:editor || :admin)
+        valid_roles = %w[admin editor]
+        raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user.roles.pluck(:name).select { |role| valid_roles.include?(role) }.any?
       end
 
       def place_params
