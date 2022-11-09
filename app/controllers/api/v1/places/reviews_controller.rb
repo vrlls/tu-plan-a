@@ -3,7 +3,7 @@
 module Api
   module V1
     module Places
-      class ReviewsController < ApplicationController
+      class ReviewsController < ApiController
         before_action :authenticate_user, only: %i[update create destroy]
         before_action :place
 
@@ -24,7 +24,6 @@ module Api
           review.place = place
           review.user = current_user
           if review.save
-            PlaceManager::ScoreCalculator.call(review.place.id)
             render json: place_reviews_serializer(review), status: :created
           else
             render json: review.errors, status: :unprocessable_entity
@@ -33,10 +32,8 @@ module Api
 
         def update
           review = Review.find(params[:id])
-
           if review.user == current_user
             if review.update(review_params)
-              PlaceManager::ScoreCalculator.call(review.place.id)
               render json: place_reviews_serializer(review), status: :ok
             else
               render json: review.errors, status: :unprocessable_entity
@@ -47,13 +44,19 @@ module Api
         end
 
         def destroy
-            review.destroy if review.user == current_user
+            review.destroy if valid_editor?
             render json: { error: 'You cant detroy another users reviews' }, status: :no_content
         rescue
             render json: { error: 'Error destroying review' }, status: :unprocessable_entity
         end
 
         private
+
+        def valid_editor?
+          return true if review.user == current_user
+
+          current_user.has_role? :moderator
+        end
 
         def reviews
           Review.where(place: place)

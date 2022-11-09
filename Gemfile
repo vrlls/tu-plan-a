@@ -22,7 +22,11 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'image_processing', '~> 1.2'
 
 # Reduces boot times through caching; required in config/boot.rb
+gem 'activeadmin'
+
 gem 'bootsnap', '>= 1.4.4', require: false
+
+gem 'devise'
 
 gem 'google_places'
 
@@ -32,14 +36,17 @@ gem 'jsonapi-serializer'
 
 gem 'knock'
 
+gem 'pry'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
+gem 'rolify'
 gem 'rubocop-rails', require: false
 gem 'rubocop'
 gem 'rubocop-performance'
 gem 'rubocop-rspec'
 
-gem 'pry'
+gem 'sass-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

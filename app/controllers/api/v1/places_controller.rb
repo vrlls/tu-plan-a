@@ -3,6 +3,12 @@
 module Api
   module V1
     class PlacesController < ApplicationController
+      rescue_from ApiExceptions::BaseException,
+      with: :render_error_response
+
+      before_action :authenticate_user, only: %i[create edit update destroy]
+      before_action :editor?, only: %i[create edit update destroy]
+
       def index
         render json: place_serializer(places), status: :ok
       end
@@ -20,6 +26,7 @@ module Api
         new_place.images.attach(place_params[:images])
 
         if new_place.save
+          current_user.add_role :creator, new_place
           render json: place_serializer(new_place), status: :created
         else
           render json: { error: 'Error creating place' }, status: :unprocessable_entity
@@ -52,12 +59,13 @@ module Api
         Place.find(params[:id])
       end
 
-      def place_params
-        params.require(:place).permit(:name, :description, :address, :category_id, :images)
+      def editor?
+        valid_roles = %w[admin editor]
+        raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user.roles.pluck(:name).select { |role| valid_roles.include?(role) }.any?
       end
 
-      def place_serializer(data)
-        PlaceSerializer.new(data).serializable_hash.to_json
+      def place_params
+        params.require(:place).permit(:name, :description, :address, :category_id, :images)
       end
     end
   end
