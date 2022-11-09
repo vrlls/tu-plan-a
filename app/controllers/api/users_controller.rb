@@ -53,7 +53,7 @@ module Api
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:username, :email, :password, :password_confirmation, { role_ids: [] })
+      params.require(:user).permit(:name, :last_name, :birth_day, :username, :email, :password, :password_confirmation, { role_ids: [] })
     end
 
     def user_serializer(data)
