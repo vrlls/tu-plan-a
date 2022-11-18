@@ -12,6 +12,10 @@ module Api
       PlaceReviewsSerializer.new(data).serializable_hash.to_json
     end
 
+    def event_reviews_serializer(data)
+      EventReviewsSerializer.new(data).serializable_hash.to_json
+    end
+
     def category_serializer(data)
       CategorySerializer.new(data).serializable_hash.to_json
     end
