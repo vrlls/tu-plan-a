@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class PlacesController < ApplicationController
+    class PlacesController < ApiController
       rescue_from ApiExceptions::BaseException,
       with: :render_error_response
 
