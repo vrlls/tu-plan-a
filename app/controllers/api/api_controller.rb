@@ -23,8 +23,13 @@ module Api
     def category_places_serializer(data)
       CategoryPlacesSerializer.new(data).serializable_hash.to_json
     end
+
     def favorite_serializer(data)
       FavoriteSerializer.new(data).serializable_hash.to_json
+    end
+
+    def event_serializer(data)
+      EventSerializer.new(data).serializable_hash.to_json
     end
 
     def render_error_response(error)

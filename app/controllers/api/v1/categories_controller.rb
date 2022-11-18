@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class CategoriesController < ApplicationController
+    class CategoriesController < ApiController
       before_action :authenticate_user, only: :create
 
       def index

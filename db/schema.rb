@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_08_212953) do
+ActiveRecord::Schema.define(version: 2022_11_12_205935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,21 @@ ActiveRecord::Schema.define(version: 2022_11_08_212953) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "location"
+    t.date "start_date"
+    t.date "end_date"
+    t.string "status"
+    t.integer "capacity"
+    t.string "contact_number"
+    t.bigint "category_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_events_on_category_id"
   end
 
   create_table "favorites", force: :cascade do |t|
@@ -138,6 +153,7 @@ ActiveRecord::Schema.define(version: 2022_11_08_212953) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "events", "categories"
   add_foreign_key "favorites", "places"
   add_foreign_key "favorites", "users"
   add_foreign_key "places", "categories"
