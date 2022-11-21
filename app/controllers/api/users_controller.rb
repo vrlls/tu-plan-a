@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  class UsersController < ApplicationController
+  class UsersController < ApiController
     rescue_from ApiExceptions::BaseException,
     with: :render_error_response
 
