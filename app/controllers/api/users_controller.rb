@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  class UsersController < ApplicationController
+  class UsersController < ApiController
     rescue_from ApiExceptions::BaseException,
     with: :render_error_response
 
@@ -21,8 +21,9 @@ module Api
 
     # POST /users
     def create
-      new_user = User.new(user_params)
+      new_user = User.new(user_params.except("roles"))
       if new_user.save
+        UserManager::RoleSetter.call(new_user.id, user_params["roles"])
         render json: user_serializer(new_user), status: :created
       else
         render json: { error: 'Error creating user' }, status: :unprocessable_entity
@@ -33,7 +34,8 @@ module Api
     def update
       raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user == set_user
 
-      if set_user.update(user_params)
+      if set_user.update(user_params.except("roles"))
+        UserManager::RoleSetter.call(new_user.id, user_params["roles"]) if user_params["roles"]
         render json: user_serializer(set_user), status: :ok
       else
         render json: { error: 'Error updating user' }, status: :unprocessable_entity
@@ -53,7 +55,7 @@ module Api
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :last_name, :birth_day, :username, :email, :password, :password_confirmation, { role_ids: [] })
+      params.require(:user).permit(:name, :last_name, :birth_day, :username, :email, :password, :password_confirmation, { roles: [] })
     end
 
     def user_serializer(data)

@@ -10,12 +10,18 @@ module Api
       before_action :editor?, only: %i[create edit update destroy]
 
       def index
-        render json: place_serializer(places), status: :ok
+        options = {
+          include: [:category]
+        }
+        render json: place_serializer(places, options), status: :ok
       end
 
       def show
         if place
-          render json: place_serializer(place), status: :found
+          options = {
+            include: [:category]
+          }
+          render json: place_serializer(place, options), status: :found
         else
           render json: { error: 'Palce not found' }, status: :not_found
         end
@@ -23,11 +29,13 @@ module Api
 
       def create
         new_place = Place.new(place_params)
-        new_place.images.attach(place_params[:images])
 
         if new_place.save
           current_user.add_role :creator, new_place
-          render json: place_serializer(new_place), status: :created
+          options = {
+            include: [:category]
+          }
+          render json: place_serializer(new_place, options), status: :created
         else
           render json: { error: 'Error creating place' }, status: :unprocessable_entity
         end
@@ -43,7 +51,10 @@ module Api
 
       def update
         if place.update(place_params)
-          render json: place_serializer(place), status: :ok
+          options = {
+            include: [:category]
+          }
+          render json: place_serializer(place, options), status: :ok
         else
           render json: { error: 'Error updating place' }, status: :unprocessable_entity
         end
@@ -65,7 +76,7 @@ module Api
       end
 
       def place_params
-        params.require(:place).permit(:name, :description, :address, :category_id, :images)
+        params.require(:place).permit(:name, :description, :address, :category_id, :cover, thumbnails: [])
       end
     end
   end

@@ -27,9 +27,13 @@ RSpec.describe 'Users', type: :request do
   describe 'POST /create' do
     subject(:post_user) { post api_signup_path(user_params) }
 
-    let(:user_params) { { 'user' => { 'name' => 'Testname', 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456' } } }
+    let(:user_params) { { 'user' => { 'name' => 'Testname', 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456', 'roles' => ['admin'] } } }
 
     it { expect { post_user }.to change(User, :count).by(1) }
+    it 'user has role admin' do
+      post_user
+      expect(User.last.roles.last.name).to eq('admin')
+    end
   end
 
   describe 'GET /show' do
