@@ -4,8 +4,8 @@ module Api
   class ApiController < ActionController::API
     include Knock::Authenticable
 
-    def place_serializer(data)
-      PlaceSerializer.new(data).serializable_hash.to_json
+    def place_serializer(data, options)
+      PlaceSerializer.new(data, options).serializable_hash.to_json
     end
 
     def place_reviews_serializer(data)
