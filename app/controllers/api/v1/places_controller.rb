@@ -63,7 +63,7 @@ module Api
       private
 
       def places
-        Place.all
+        Place.all.includes(%i[cover_attachment thumbnails_attachments category])
       end
 
       def place

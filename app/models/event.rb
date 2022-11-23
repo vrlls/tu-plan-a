@@ -2,7 +2,7 @@
 
 class Event < ApplicationRecord
   resourcify
-  belongs_to :category
+  belongs_to :category, optional: true
 
   has_one_attached :cover
   has_many_attached :images
