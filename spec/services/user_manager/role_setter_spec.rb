@@ -7,10 +7,10 @@ RSpec.describe UserManager::RoleSetter, type: :service do
     subject(:set_role) { described_class.call(user.id, roles) }
 
     let!(:user) { create(:user) }
-    let(:roles) { ['admin', 'editor'] }
+    let(:roles) { %w[admin editor] }
 
     before do
-      subject
+      set_role
     end
 
     it { expect(User.last.roles.pluck(:name)).to include('admin', 'editor') }

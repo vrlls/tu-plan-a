@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Places::Reviews', type: :request do
+RSpec.describe 'Places::Reviews' do
   def authenticated_header(user)
     token = Knock::AuthToken.new(payload: { sub: user.id }).token
     { Authorization: "Bearer #{token}" }

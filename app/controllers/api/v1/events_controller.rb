@@ -6,11 +6,22 @@ module Api
       rescue_from ApiExceptions::BaseException,
       with: :render_error_response
 
-      before_action :authenticate_user, only: %i[create edit update destroy]
-      before_action :editor?, only: %i[create edit update destroy]
+      VALID_ROLES = %w[admin editor].freeze
+
+      before_action :authenticate_user, except: %i[index show]
+      before_action :allowed_to_edit?, only: %i[edit update destroy activate cancel postpone finish]
+      before_action :allowed_to_create?, only: %i[create]
 
       def index
         render json: event_serializer(events), status: :ok
+      end
+
+      def show
+        if event
+          render json: event_serializer(event), status: :found
+        else
+          render json: { error: 'Event not found' }, status: :not_found
+        end
       end
 
       def create
@@ -24,11 +35,11 @@ module Api
         end
       end
 
-      def show
-        if event
-          render json: event_serializer(event), status: :found
+      def update
+        if event.update(event_params)
+          render json: event_serializer(event), status: :ok
         else
-          render json: { error: 'Event not found' }, status: :not_found
+          render json: { error: 'Error updating event' }, status: :unprocessable_entity
         end
       end
 
@@ -40,27 +51,64 @@ module Api
         end
       end
 
-      def update
-        if event.update(event_params)
-          render json: event_serializer(event), status: :ok
+      def activate
+        if event.on_hold? || event.postponed?
+          event.activate!
+          render json: { message: 'Event activated' }, status: :ok
         else
-          render json: { error: 'Error updating event' }, status: :unprocessable_entity
+          render json: { error: "The status of the event doesn't allow to be activate" }, status: :unprocessable_entity
+        end
+      end
+
+      def cancel
+        if event.on_hold? || event.postponed? || event.active?
+          event.cancel!
+          render json: { message: 'Event canceled' }, status: :ok
+        else
+          render json: { error: "The status of the event doesn't allow to be cancel" }, status: :unprocessable_entity
+        end
+      end
+
+      def postpone
+        if event.on_hold? || event.active?
+          event.postpone!
+          render json: { message: 'Event postponed' }, status: :ok
+        else
+          render json: { error: "The status of the event doesn't allow to be postpone" }, status: :unprocessable_entity
+        end
+      end
+
+      def finish
+        if event.active?
+          event.finish!
+          render json: { message: 'Event finished' }, status: :ok
+        else
+          render json: { error: "The status of the event doesn't allow to be finished" }, status: :unprocessable_entity
         end
       end
 
       private
 
       def events
-        Event.all
+        Event.all.includes(%i[images_attachments cover_attachment])
       end
 
       def event
-        Event.find(params[:id])
+        Event.find(params[:id] || params['event_id'])
       end
 
-      def editor?
-        valid_roles = %w[admin editor]
-        raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user.roles.pluck(:name).select { |role| valid_roles.include?(role) }.any?
+      def allowed_to_edit?
+        return if current_user.has_role? :creator, event
+
+        raise ApiExceptions::PermitError::InsufficientPermitsError unless valid_user_roles?
+      end
+
+      def allowed_to_create?
+        raise ApiExceptions::PermitError::InsufficientPermitsError unless valid_user_roles?
+      end
+
+      def valid_user_roles?
+        current_user.roles.pluck(:name).select { |role| VALID_ROLES.include?(role) }.any?
       end
 
       def event_params

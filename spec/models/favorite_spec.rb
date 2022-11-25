@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Favorite, type: :model do
+RSpec.describe Favorite do
   describe 'associations' do
     subject { create(:favorite) }
 

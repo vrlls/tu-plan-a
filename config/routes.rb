@@ -25,6 +25,10 @@ Rails.application.routes.draw do
       resources :reviews, only: [:index]
 
       resources :events do
+        put '/activate', to: 'events#activate'
+        put '/postpone', to: 'events#postpone'
+        put '/cancel', to: 'events#cancel'
+        put '/finish', to: 'events#finish'
         resources :reviews, controller: "events/reviews"
       end
     end

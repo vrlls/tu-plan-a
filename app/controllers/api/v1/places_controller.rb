@@ -41,14 +41,6 @@ module Api
         end
       end
 
-      def destroy
-        if place.destroy
-          render json: { message: 'Place was successfully destroyed' }, status: :no_content
-        else
-          render json: { error: 'Error destroying place' }, status: :unprocessable_entity
-        end
-      end
-
       def update
         if place.update(place_params)
           options = {
@@ -57,6 +49,14 @@ module Api
           render json: place_serializer(place, options), status: :ok
         else
           render json: { error: 'Error updating place' }, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        if place.destroy
+          render json: { message: 'Place was successfully destroyed' }, status: :no_content
+        else
+          render json: { error: 'Error destroying place' }, status: :unprocessable_entity
         end
       end
 

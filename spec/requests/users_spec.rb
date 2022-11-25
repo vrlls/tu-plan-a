@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Users', type: :request do
+RSpec.describe 'Users' do
   def authenticated_header(user)
     token = Knock::AuthToken.new(payload: { sub: user.id }).token
     { Authorization: "Bearer #{token}" }
@@ -30,6 +30,7 @@ RSpec.describe 'Users', type: :request do
     let(:user_params) { { 'user' => { 'name' => 'Testname', 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456', 'roles' => ['admin'] } } }
 
     it { expect { post_user }.to change(User, :count).by(1) }
+
     it 'user has role admin' do
       post_user
       expect(User.last.roles.last.name).to eq('admin')

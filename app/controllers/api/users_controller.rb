@@ -21,9 +21,9 @@ module Api
 
     # POST /users
     def create
-      new_user = User.new(user_params.except("roles"))
+      new_user = User.new(user_params.except('roles'))
       if new_user.save
-        UserManager::RoleSetter.call(new_user.id, user_params["roles"])
+        UserManager::RoleSetter.call(new_user.id, user_params['roles'])
         render json: user_serializer(new_user), status: :created
       else
         render json: { error: 'Error creating user' }, status: :unprocessable_entity
@@ -34,8 +34,8 @@ module Api
     def update
       raise ApiExceptions::PermitError::InsufficientPermitsError unless current_user == set_user
 
-      if set_user.update(user_params.except("roles"))
-        UserManager::RoleSetter.call(new_user.id, user_params["roles"]) if user_params["roles"]
+      if set_user.update(user_params.except('roles'))
+        UserManager::RoleSetter.call(new_user.id, user_params['roles']) if user_params['roles']
         render json: user_serializer(set_user), status: :ok
       else
         render json: { error: 'Error updating user' }, status: :unprocessable_entity
