@@ -30,6 +30,7 @@ RSpec.describe 'Users' do
     let(:user_params) { { 'user' => { 'name' => 'Testname', 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456', 'roles' => ['admin'] } } }
 
     it { expect { post_user }.to change(User, :count).by(1) }
+
     it 'user has role admin' do
       post_user
       expect(User.last.roles.last.name).to eq('admin')

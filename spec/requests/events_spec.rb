@@ -130,4 +130,60 @@ RSpec.describe 'Events' do
 
     it { expect(Event.last).to be_finished }
   end
+
+  describe 'PUT /activate' do
+    subject(:activate) { put api_v1_event_activate_path(event), headers: authenticated_header(user) }
+
+    let(:event) { create(:event) }
+    let!(:user) { create(:editor) }
+
+
+    before do
+      activate
+    end
+
+    it { expect(Event.last).to be_active }
+  end
+
+  describe 'PUT /postpone' do
+    subject(:postpone) { put api_v1_event_postpone_path(event), headers: authenticated_header(user) }
+
+    let(:event) { create(:event) }
+    let!(:user) { create(:editor) }
+
+
+    before do
+      postpone
+    end
+
+    it { expect(Event.last).to be_postponed }
+  end
+
+  describe 'PUT /cancel' do
+    subject(:cancel) { put api_v1_event_cancel_path(event), headers: authenticated_header(user) }
+
+    let(:event) { create(:event) }
+    let!(:user) { create(:editor) }
+
+
+    before do
+      cancel
+    end
+
+    it { expect(Event.last).to be_canceled }
+  end
+
+  describe 'PUT /finish' do
+    subject(:finish) { put api_v1_event_finish_path(event), headers: authenticated_header(user) }
+
+    let(:event) { create(:event, status: 'active') }
+    let!(:user) { create(:editor) }
+
+
+    before do
+      finish
+    end
+
+    it { expect(Event.last).to be_finished }
+  end
 end
