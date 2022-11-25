@@ -2,7 +2,7 @@
 
 class EventSerializer
   include JSONAPI::Serializer
-  attributes :name, :location, :description
+  attributes :name, :location, :description, :status
   belongs_to :category
 
   attribute :cover_url do |object|

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Categories::Places', type: :request do
+RSpec.describe 'Categories::Places' do
   describe 'GET /index' do
     subject(:get_places) { get api_v1_category_places_path(category) }
 
