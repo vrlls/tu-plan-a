@@ -8,12 +8,12 @@ module Api
         before_action :place
 
         def index
-          render json: place_reviews_serializer(reviews), status: :ok
+          render json: reviews, each_serializer: ReviewSerializer, status: :ok
         end
 
         def show
           if review
-            render json: place_reviews_serializer(review), status: :ok
+            render json: review, serializer: ReviewSerializer, status: :ok
           else
             render json: { error: 'Review not found' }, status: :not_found
           end
@@ -24,7 +24,7 @@ module Api
           review.place = place
           review.user = current_user
           if review.save
-            render json: place_reviews_serializer(review), status: :created
+            render json: review, serializer: ReviewSerializer, status: :created
           else
             render json: review.errors, status: :unprocessable_entity
           end
@@ -34,7 +34,7 @@ module Api
           review = Review.find(params[:id])
           if review.user == current_user
             if review.update(review_params)
-              render json: place_reviews_serializer(review), status: :ok
+              render json: review, serializer: ReviewSerializer, status: :ok
             else
               render json: review.errors, status: :unprocessable_entity
             end
@@ -59,7 +59,7 @@ module Api
         end
 
         def reviews
-          Review.where(place: place)
+          place.reviews.page(params[:page]).per(10)
         end
 
         def review

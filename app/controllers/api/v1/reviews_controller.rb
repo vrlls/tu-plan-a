@@ -8,7 +8,7 @@ module Api
 
       def index
         if reviews.any?
-          render json: place_reviews_serializer(reviews), status: :ok
+          render json: reviews, each_serializer: ReviewSerializer, status: :ok
         else
           render json: { response: "Yo don't have any review yet" }, status: :ok
         end
@@ -17,7 +17,7 @@ module Api
       private
 
       def reviews
-        Review.where(user: current_user)
+        current_user.reviews.page(params[:page]).per(10)
       end
 
 

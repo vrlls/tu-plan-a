@@ -11,12 +11,12 @@ module Api
 
     # GET /users
     def index
-      render json: user_serializer(users), status: :ok
+      render json: users, each_serializer: UserSerializer, status: :ok
     end
 
     # GET /users/1
     def show
-      render json: user_serializer(set_user), status: :found
+      render json: set_user, serializer: UserSerializer, status: :found
     end
 
     # POST /users
@@ -24,7 +24,7 @@ module Api
       new_user = User.new(user_params.except('roles'))
       if new_user.save
         UserManager::RoleSetter.call(new_user.id, user_params['roles'])
-        render json: user_serializer(new_user), status: :created
+        render json: new_user, serializer: UserSerializer, status: :created
       else
         render json: { error: 'Error creating user' }, status: :unprocessable_entity
       end
@@ -36,7 +36,7 @@ module Api
 
       if set_user.update(user_params.except('roles'))
         UserManager::RoleSetter.call(new_user.id, user_params['roles']) if user_params['roles']
-        render json: user_serializer(set_user), status: :ok
+        render json: set_user, serializer: UserSerializer, status: :ok
       else
         render json: { error: 'Error updating user' }, status: :unprocessable_entity
       end
@@ -45,7 +45,7 @@ module Api
     private
 
     def users
-      User.all
+      User.all.page(params[:page]).per(10)
     end
 
     # Use callbacks to share common setup or constraints between actions.

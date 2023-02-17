@@ -24,6 +24,8 @@ gem 'image_processing', '~> 1.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'activeadmin'
 
+gem 'active_model_serializers'
+
 gem 'aasm'
 
 gem 'bootsnap', '>= 1.4.4', require: false
@@ -35,6 +37,8 @@ gem 'google_places'
 gem 'google_maps_service'
 
 gem 'jsonapi-serializer'
+
+gem 'kaminari'
 
 gem 'knock'
 

@@ -19,8 +19,8 @@ RSpec.describe 'Places' do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json['data']).not_to be_empty }
-    it { expect(json['data'].size).to eq(5) }
+    it { expect(json).not_to be_empty }
+    it { expect(json.size).to eq(5) }
   end
 
   describe 'POST /create' do
@@ -46,7 +46,7 @@ RSpec.describe 'Places' do
       get api_v1_place_path(place.id)
     end
 
-    it { expect(json['data']['id'].to_i).to eq(place.id) }
+    it { expect(json['id'].to_i).to eq(place.id) }
   end
 
   describe 'DELETE /destroy' do
@@ -72,6 +72,6 @@ RSpec.describe 'Places' do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json['data']['attributes']['name']).to eq('New name') }
+    it { expect(json['name']).to eq('New name') }
   end
 end

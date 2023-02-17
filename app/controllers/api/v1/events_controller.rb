@@ -13,12 +13,12 @@ module Api
       before_action :allowed_to_create?, only: %i[create]
 
       def index
-        render json: event_serializer(events), status: :ok
+        render json: events, each_serializer: EventSerializer, status: :ok
       end
 
       def show
         if event
-          render json: event_serializer(event), status: :found
+          render json: event, serializer: EventSerializer, status: :found
         else
           render json: { error: 'Event not found' }, status: :not_found
         end
@@ -29,7 +29,7 @@ module Api
 
         if new_event.save
           current_user.add_role :creator, new_event
-          render json: event_serializer(new_event), status: :created
+          render json: new_event, serializer: EventSerializer, status: :created
         else
           render json: { error: 'Error creating event' }, status: :unprocessable_entity
         end
@@ -37,7 +37,7 @@ module Api
 
       def update
         if event.update(event_params)
-          render json: event_serializer(event), status: :ok
+          render json: event, serializer: EventSerializer, status: :ok
         else
           render json: { error: 'Error updating event' }, status: :unprocessable_entity
         end
@@ -90,7 +90,7 @@ module Api
       private
 
       def events
-        Event.all.includes(%i[images_attachments cover_attachment])
+        Event.all.includes(%i[category images_attachments cover_attachment]).page(params[:page]).per(10)
       end
 
       def event

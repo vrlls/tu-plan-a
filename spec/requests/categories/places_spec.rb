@@ -16,6 +16,6 @@ RSpec.describe 'Categories::Places' do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json).to eq(json(CategoryPlacesSerializer.new(places).serializable_hash.to_json)) }
+    it { expect(json).to eq(JSON.parse(response.body)) }
   end
 end

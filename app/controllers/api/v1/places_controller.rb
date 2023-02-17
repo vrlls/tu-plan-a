@@ -13,7 +13,7 @@ module Api
         options = {
           include: [:category]
         }
-        render json: place_serializer(places, options), status: :ok
+        render json: places, each_serializer: PlaceSerializer, status: :ok
       end
 
       def show
@@ -21,7 +21,7 @@ module Api
           options = {
             include: [:category]
           }
-          render json: place_serializer(place, options), status: :found
+          render json: place, serializer: PlaceSerializer, status: :found
         else
           render json: { error: 'Palce not found' }, status: :not_found
         end
@@ -35,7 +35,7 @@ module Api
           options = {
             include: [:category]
           }
-          render json: place_serializer(new_place, options), status: :created
+          render json: new_place, serializer: PlaceSerializer, status: :created
         else
           render json: { error: 'Error creating place' }, status: :unprocessable_entity
         end
@@ -46,7 +46,7 @@ module Api
           options = {
             include: [:category]
           }
-          render json: place_serializer(place, options), status: :ok
+          render json: place, serializer: PlaceSerializer, status: :ok
         else
           render json: { error: 'Error updating place' }, status: :unprocessable_entity
         end
@@ -63,7 +63,7 @@ module Api
       private
 
       def places
-        Place.all.includes(%i[cover_attachment thumbnails_attachments category])
+        Place.all.includes(%i[cover_attachment thumbnails_attachments category]).page(params[:page]).per(10)
       end
 
       def place

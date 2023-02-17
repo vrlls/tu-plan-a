@@ -20,8 +20,8 @@ RSpec.describe 'Users' do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json['data']).not_to be_empty }
-    it { expect(json['data'].size).to eq(6) }
+    it { expect(json).not_to be_empty }
+    it { expect(json.size).to eq(6) }
   end
 
   describe 'POST /create' do
@@ -45,7 +45,7 @@ RSpec.describe 'Users' do
       get api_v1_user_path(user.id), headers: authenticated_header(user)
     end
 
-    it { expect(json['data']['id'].to_i).to eq(user.id) }
+    it { expect(json['id'].to_i).to eq(user.id) }
   end
 
   describe 'PUT /update' do
@@ -58,6 +58,6 @@ RSpec.describe 'Users' do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json['data']['attributes']['username']).to eq('New name') }
+    it { expect(json['username']).to eq('New name') }
   end
 end

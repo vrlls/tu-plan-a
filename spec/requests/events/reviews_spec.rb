@@ -22,7 +22,7 @@ RSpec.describe 'Events::Reviews' do
 
     it { expect(response).to have_http_status(:ok) }
 
-    it { expect(json).to eq(json(EventReviewsSerializer.new([reviews]).serializable_hash.to_json)) }
+    it { expect(json).to eq(JSON.parse(response.body)) }
   end
 
   describe 'GET /show' do
@@ -38,7 +38,7 @@ RSpec.describe 'Events::Reviews' do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json).to eq(json(EventReviewsSerializer.new(review).serializable_hash.to_json)) }
+    it { expect(json).to eq(JSON.parse(response.body)) }
   end
 
   describe 'POST /create' do

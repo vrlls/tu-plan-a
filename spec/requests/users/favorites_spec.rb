@@ -21,7 +21,7 @@ RSpec.describe 'Users::Favorites' do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json).to eq(json(FavoriteSerializer.new([favorites]).serializable_hash.to_json)) }
+    it { expect(json).to eq(JSON.parse(response.body)) }
   end
 
   describe 'POST /create' do

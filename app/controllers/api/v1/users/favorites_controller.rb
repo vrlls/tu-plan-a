@@ -9,7 +9,7 @@ module Api
           if favorites.empty?
             render json: { response: 'No favorite places found' }, status: :ok
           else
-            render json: favorite_serializer(favorites), status: :ok
+            render json: favorites, each_serializer: FavoriteSerializer, status: :ok
           end
         end
 
@@ -33,7 +33,7 @@ module Api
         private
 
         def favorites
-          current_user.favorites
+          current_user.favorites.page(params[:page]).per(10)
         end
 
         def favorite_params

@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
-class EventSerializer
-  include JSONAPI::Serializer
-  attributes :name, :location, :description, :status
+class EventSerializer < ActiveModel::Serializer
+  attributes :id, :name, :location, :description, :status, :cover_url, :iamges_urls
   belongs_to :category
 
-  attribute :cover_url do |object|
-    Rails.application.routes.url_helpers.rails_blob_url(object.cover, only_path: true) if object.cover.attached?
+  def cover_url
+    if object.cover.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(object.cover, only_path: true)
+    end
   end
 
-  attribute :images_urls do |object|
-    object.images.map do |image|
-      Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true) if object.images.attached?
+  def iamges_urls
+    if object.images.attached?
+      object.images.map do |image|
+        Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true)
+      end
     end
   end
 end
