@@ -1,5 +1,7 @@
-class PlaceSerializer < ActiveModel::Serializer
-  attributes attributes :id, :name, :address, :description, :score, :cover_url, :thumb_nails_urls
+# frozen_string_literal: true
+
+class EventSerializer < ActiveModel::Serializer
+  attributes :id, :name, :location, :description, :status, :cover_url, :iamges_urls
   belongs_to :category
 
   def cover_url
@@ -8,9 +10,9 @@ class PlaceSerializer < ActiveModel::Serializer
     end
   end
 
-  def thumb_nails_urls
-    if object.thumbnails.attached?
-      object.thumbnails.map do |image|
+  def iamges_urls
+    if object.images.attached?
+      object.images.map do |image|
         Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true)
       end
     end

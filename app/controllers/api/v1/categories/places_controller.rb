@@ -4,20 +4,15 @@ module Api
   module V1
     module Categories
       class PlacesController < ApiController
-        before_action :category
 
         def index
-          render json: category_places_serializer(places), status: :ok
+          render json: places, each_serializer: PlaceSerializer, status: :ok
         end
 
         private
 
         def places
-          Place.where(category: category)
-        end
-
-        def category
-          Category.find(params[:category_id])
+          Category.find(params[:category_id]).places.page(params[:page]).per(10)
         end
       end
     end

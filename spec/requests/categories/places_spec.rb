@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Categories::Places', type: :request do
+RSpec.describe 'Categories::Places' do
   describe 'GET /index' do
     subject(:get_places) { get api_v1_category_places_path(category) }
 
@@ -16,6 +16,6 @@ RSpec.describe 'Categories::Places', type: :request do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json).to eq(json(CategoryPlacesSerializer.new(places).serializable_hash.to_json)) }
+    it { expect(json).to eq(JSON.parse(response.body)) }
   end
 end

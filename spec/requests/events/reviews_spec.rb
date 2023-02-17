@@ -2,18 +2,18 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Places::Reviews' do
+RSpec.describe 'Events::Reviews' do
   def authenticated_header(user)
     token = Knock::AuthToken.new(payload: { sub: user.id }).token
     { Authorization: "Bearer #{token}" }
   end
 
   describe 'GET /index' do
-    subject(:get_reviews) { get api_v1_place_reviews_path(place) }
+    subject(:get_reviews) { get api_v1_event_reviews_path(event) }
 
-    let!(:place) { create(:place) }
+    let!(:event) { create(:event) }
     let!(:user) { create(:user) }
-    let(:reviews) { create(:review, place: place, user: user) }
+    let(:reviews) { create(:review, event: event, place: nil, user: user) }
 
     before do
       reviews
@@ -26,11 +26,11 @@ RSpec.describe 'Places::Reviews' do
   end
 
   describe 'GET /show' do
-    subject(:get_review) { get api_v1_place_review_path(place, review) }
+    subject(:get_review) { get api_v1_event_review_path(event, review) }
 
-    let!(:place) { create(:place) }
+    let!(:event) { create(:event) }
     let!(:user) { create(:user) }
-    let(:review) { create(:review, place: place, user: user) }
+    let(:review) { create(:review, event: event, place: nil, user: user) }
 
     before do
       review
@@ -42,10 +42,10 @@ RSpec.describe 'Places::Reviews' do
   end
 
   describe 'POST /create' do
-    subject(:post_review) { post api_v1_place_reviews_path(place), params: review_params, headers: authenticated_header(user) }
+    subject(:post_review) { post api_v1_event_reviews_path(event), params: review_params, headers: authenticated_header(user) }
 
     let!(:user) { create(:user) }
-    let!(:place) { create(:place) }
+    let!(:event) { create(:event) }
     let(:review_params) { { review: { title: 'Review title', comment: 'Review comment', score: 5.0 } } }
 
 
@@ -53,11 +53,11 @@ RSpec.describe 'Places::Reviews' do
   end
 
   describe 'PUT /update' do
-    subject(:update_review) { put api_v1_place_review_path(place, review), params: review_params, headers: authenticated_header(user) }
+    subject(:update_review) { put api_v1_event_review_path(event, review), params: review_params, headers: authenticated_header(user) }
 
-    let!(:place) { create(:place) }
+    let!(:event) { create(:event) }
     let!(:user) { create(:user) }
-    let!(:review) { create(:review, user: user, place: place) }
+    let!(:review) { create(:review, user: user, event: event, place: nil) }
     let(:review_params) { { review: { title: 'New review title' } } }
 
 
@@ -71,13 +71,13 @@ RSpec.describe 'Places::Reviews' do
     subject(:destroy_review) {}
 
     let!(:user) { create(:moderator) }
-    let!(:place) { create(:place) }
-    let(:review) { create(:review, place: place, user: user) }
+    let!(:event) { create(:event) }
+    let(:review) { create(:review, event: event, place: nil, user: user) }
 
 
     before do
       review
-      delete api_v1_place_review_path(place, review), headers: authenticated_header(user)
+      delete api_v1_event_review_path(event, review), headers: authenticated_header(user)
     end
 
     it { expect(response).to have_http_status(:no_content) }

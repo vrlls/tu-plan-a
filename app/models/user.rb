@@ -6,9 +6,10 @@ class User < ApplicationRecord
   has_secure_password
   has_many :favorites, dependent: :destroy
   has_many :places, through: :favorites
+  has_many :reviews, dependent: :destroy
   validates :username, presence: true
   validates :name, presence: true
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i.freeze
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validate :must_have_a_role, on: :update
 

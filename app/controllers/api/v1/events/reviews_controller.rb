@@ -2,10 +2,10 @@
 
 module Api
   module V1
-    module Places
+    module Events
       class ReviewsController < ApiController
         before_action :authenticate_user, only: %i[update create destroy]
-        before_action :place
+        before_action :event
 
         def index
           render json: reviews, each_serializer: ReviewSerializer, status: :ok
@@ -21,7 +21,7 @@ module Api
 
         def create
           review = Review.new(review_params)
-          review.place = place
+          review.event = event
           review.user = current_user
           if review.save
             render json: review, serializer: ReviewSerializer, status: :created
@@ -59,15 +59,15 @@ module Api
         end
 
         def reviews
-          place.reviews.page(params[:page]).per(10)
+          Review.where(event: event)
         end
 
         def review
           Review.find_by(id: params[:id])
         end
 
-        def place
-          Place.find(params[:place_id])
+        def event
+          Event.find(params[:event_id])
         end
 
         def review_params

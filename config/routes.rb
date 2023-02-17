@@ -23,6 +23,14 @@ Rails.application.routes.draw do
       end
 
       resources :reviews, only: [:index]
+
+      resources :events do
+        put '/activate', to: 'events#activate'
+        put '/postpone', to: 'events#postpone'
+        put '/cancel', to: 'events#cancel'
+        put '/finish', to: 'events#finish'
+        resources :reviews, controller: "events/reviews"
+      end
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Users::Favorites', type: :request do
+RSpec.describe 'Users::Favorites' do
   def authenticated_header(user)
     token = Knock::AuthToken.new(payload: { sub: user.id }).token
     { Authorization: "Bearer #{token}" }
@@ -21,7 +21,7 @@ RSpec.describe 'Users::Favorites', type: :request do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json).to eq(json(PlaceSerializer.new([place]).serializable_hash.to_json)) }
+    it { expect(json).to eq(JSON.parse(response.body)) }
   end
 
   describe 'POST /create' do

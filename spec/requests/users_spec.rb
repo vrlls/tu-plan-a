@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Users', type: :request do
+RSpec.describe 'Users' do
   def authenticated_header(user)
     token = Knock::AuthToken.new(payload: { sub: user.id }).token
     { Authorization: "Bearer #{token}" }
@@ -20,16 +20,21 @@ RSpec.describe 'Users', type: :request do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json['data']).not_to be_empty }
-    it { expect(json['data'].size).to eq(6) }
+    it { expect(json).not_to be_empty }
+    it { expect(json.size).to eq(6) }
   end
 
   describe 'POST /create' do
     subject(:post_user) { post api_signup_path(user_params) }
 
-    let(:user_params) { { 'user' => { 'name' => 'Testname', 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456' } } }
+    let(:user_params) { { 'user' => { 'name' => 'Testname', 'username' => 'Test', 'email' => 'test@email.com', 'password' => '123456', 'roles' => ['admin'] } } }
 
     it { expect { post_user }.to change(User, :count).by(1) }
+
+    it 'user has role admin' do
+      post_user
+      expect(User.last.roles.last.name).to eq('admin')
+    end
   end
 
   describe 'GET /show' do
@@ -40,7 +45,7 @@ RSpec.describe 'Users', type: :request do
       get api_v1_user_path(user.id), headers: authenticated_header(user)
     end
 
-    it { expect(json['data']['id'].to_i).to eq(user.id) }
+    it { expect(json['id'].to_i).to eq(user.id) }
   end
 
   describe 'PUT /update' do
@@ -53,6 +58,6 @@ RSpec.describe 'Users', type: :request do
     end
 
     it { expect(response).to have_http_status(:ok) }
-    it { expect(json['data']['attributes']['username']).to eq('New name') }
+    it { expect(json['username']).to eq('New name') }
   end
 end

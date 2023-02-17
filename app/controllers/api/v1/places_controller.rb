@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class PlacesController < ApplicationController
+    class PlacesController < ApiController
       rescue_from ApiExceptions::BaseException,
       with: :render_error_response
 
@@ -10,12 +10,18 @@ module Api
       before_action :editor?, only: %i[create edit update destroy]
 
       def index
-        render json: place_serializer(places), status: :ok
+        options = {
+          include: [:category]
+        }
+        render json: places, each_serializer: PlaceSerializer, status: :ok
       end
 
       def show
         if place
-          render json: place_serializer(place), status: :found
+          options = {
+            include: [:category]
+          }
+          render json: place, serializer: PlaceSerializer, status: :found
         else
           render json: { error: 'Palce not found' }, status: :not_found
         end
@@ -23,13 +29,26 @@ module Api
 
       def create
         new_place = Place.new(place_params)
-        new_place.images.attach(place_params[:images])
 
         if new_place.save
           current_user.add_role :creator, new_place
-          render json: place_serializer(new_place), status: :created
+          options = {
+            include: [:category]
+          }
+          render json: new_place, serializer: PlaceSerializer, status: :created
         else
           render json: { error: 'Error creating place' }, status: :unprocessable_entity
+        end
+      end
+
+      def update
+        if place.update(place_params)
+          options = {
+            include: [:category]
+          }
+          render json: place, serializer: PlaceSerializer, status: :ok
+        else
+          render json: { error: 'Error updating place' }, status: :unprocessable_entity
         end
       end
 
@@ -41,18 +60,10 @@ module Api
         end
       end
 
-      def update
-        if place.update(place_params)
-          render json: place_serializer(place), status: :ok
-        else
-          render json: { error: 'Error updating place' }, status: :unprocessable_entity
-        end
-      end
-
       private
 
       def places
-        Place.all
+        Place.all.includes(%i[cover_attachment thumbnails_attachments category]).page(params[:page]).per(10)
       end
 
       def place
@@ -65,7 +76,7 @@ module Api
       end
 
       def place_params
-        params.require(:place).permit(:name, :description, :address, :category_id, :images)
+        params.require(:place).permit(:name, :description, :address, :category_id, :cover, thumbnails: [])
       end
     end
   end

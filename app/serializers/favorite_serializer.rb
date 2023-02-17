@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class FavoriteSerializer
-  include JSONAPI::Serializer
-
+class FavoriteSerializer < ActiveModel::Serializer
+  attribute :id
   belongs_to :place
-  belongs_to :user
 end

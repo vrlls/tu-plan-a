@@ -2,22 +2,22 @@
 
 module Api
   module V1
-    class CategoriesController < ApplicationController
+    class CategoriesController < ApiController
       before_action :authenticate_user, only: :create
 
       def index
-        render json: category_serializer(categories), status: :ok
+        render json: categories, each_serialize: CategorySerializer, status: :ok
       end
 
       def show
-        render json: category_serializer(category), status: :ok
+        render json: category, serializer: CategorySerializer, status: :ok
       end
 
       def create
         category = Category.create(category_params)
 
         if category.save
-          render json: category_serializer(category), status: :created
+          render json: category, serializer: CategorySerializer, status: :created
         else
           render json: { error: 'Error creating category' }, status: :unprocessable_entity
         end
@@ -26,7 +26,7 @@ module Api
       private
 
       def categories
-        Category.all
+        Category.all.page(params[:page]).per(10)
       end
 
       def category_params
