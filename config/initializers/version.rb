@@ -3,6 +3,6 @@
 module TuPlanA
   class Application
     # tu-plan-a Version
-    VERSION = '1.0.5'
+    VERSION = '2.0.0'
   end
 end
