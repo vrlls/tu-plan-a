@@ -8,10 +8,6 @@ module Api
       FavoriteSerializer.new(data).serializable_hash.to_json
     end
 
-    def event_serializer(data)
-      EventSerializer.new(data).serializable_hash.to_json
-    end
-
     def render_error_response(error)
       render json: { status: error.status, code: error.code, message: error.message }, status: error.code
     end
