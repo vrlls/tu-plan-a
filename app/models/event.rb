@@ -2,11 +2,13 @@
 
 class Event < ApplicationRecord
   include AASM
+  include CategoriesValidation
 
   aasm column: 'status' do
   end
   include AASM
   resourcify
+  acts_as_taggable_on :categories
   belongs_to :category, optional: true
 
   has_one_attached :cover
@@ -17,6 +19,7 @@ class Event < ApplicationRecord
   validates :start_date, presence: true
   validates :end_date, presence: true
   validate :valid_dates
+  before_create :categories_validation
 
   aasm do
     state :on_hold, initial: true

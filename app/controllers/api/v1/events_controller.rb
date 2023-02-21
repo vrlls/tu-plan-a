@@ -112,7 +112,7 @@ module Api
       end
 
       def event_params
-        params.require(:event).permit(:name, :description, :location, :category_id, :start_date, :end_date, :cover, images: [])
+        params.require(:event).permit(:name, :description, :location, :category_list, :start_date, :end_date, :cover, images: [])
       end
     end
   end
