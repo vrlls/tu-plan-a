@@ -1,6 +1,5 @@
 class PlaceSerializer < ActiveModel::Serializer
-  attributes attributes :id, :name, :address, :description, :score, :cover_url, :thumb_nails_urls
-  belongs_to :category
+  attributes attributes :id, :name, :address, :description, :score, :cover_url, :thumb_nails_urls, :category_list
 
   def cover_url
     if object.cover.attached?

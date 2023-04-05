@@ -7,6 +7,6 @@ FactoryBot.define do
     description { Faker::Lorem.paragraph }
     start_date { 'Sun, 11 Dec 2022' }
     end_date { 'Mon, 12 Dec 2022' }
-    category
+    category_list { %w[restaurant bar] }
   end
 end

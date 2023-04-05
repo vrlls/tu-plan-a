@@ -10,7 +10,7 @@ module Api
       before_action :editor?, only: %i[create edit update destroy]
 
       def index
-        if params[:category_list]
+        if params[:category_list] and params[:category_list].any?
           render json: filtered_places, each_serializer: PlaceSerializer, status: :ok
         else
           render json: places, each_serializer: PlaceSerializer, status: :ok
@@ -41,9 +41,6 @@ module Api
 
       def update
         if place.update(place_params)
-          options = {
-            include: [:category]
-          }
           render json: place, serializer: PlaceSerializer, status: :ok
         else
           render json: { error: 'Error updating place' }, status: :unprocessable_entity
@@ -61,11 +58,11 @@ module Api
       private
 
       def places
-        Place.all.includes(%i[cover_attachment thumbnails_attachments category]).page(params[:page]).per(10)
+        Place.all.includes(%i[cover_attachment thumbnails_attachments taggings]).page(params[:page]).per(10)
       end
 
       def filtered_places
-        Place.tagged_with(params[:category_list], :any => true).includes(%i[cover_attachment thumbnails_attachments category]).page(params[:page]).per(10)
+        Place.tagged_with(params[:category_list], params[:match].to_sym => true).includes(%i[cover_attachment thumbnails_attachments taggings]).page(params[:page]).per(10)
       end
 
       def place

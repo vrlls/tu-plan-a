@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class EventSerializer < ActiveModel::Serializer
-  attributes :id, :name, :location, :description, :status, :cover_url, :iamges_urls
-  belongs_to :category
+  attributes :id, :name, :location, :description, :status, :cover_url, :iamges_urls, :category_list
 
   def cover_url
     if object.cover.attached?
