@@ -1,24 +1,38 @@
-# README
+# Tu-plan-a
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+It is an only api app that allows you to create and review places.
 
-Things you may want to cover:
+Functionalities: Register and log in and log out using a user access token.
 
-* Ruby version
+## Get
+* Get places
+* Get categories
+* Get category
+* Get places by category
+* Get user's favourite places
+* User reviews
+* Place reviews
+* Get User
+* Get events
+* Get event
 
-* System dependencies
+## Publish
+* Create venues
+* Create categories
+* Add to favourites
+* Review places
+* Create event
 
-* Configuration
+## Update/Patch
+* Update place
+* Update place revision
+* Update user
+* Activate event
+* Postpone event
+* Cancel event
+* End event
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Delete
+* Delete place
+* Delete favourite
+* Delete venue review
