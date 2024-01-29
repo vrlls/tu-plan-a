@@ -24,14 +24,6 @@ module Api
         end
       end
 
-      def show
-        if event
-          render json: event, serializer: EventSerializer, status: :found
-        else
-          render json: { error: 'Event not found' }, status: :not_found
-        end
-      end
-
       def create
         new_event = Event.new(event_params)
 
