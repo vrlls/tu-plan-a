@@ -6,6 +6,6 @@ FactoryBot.define do
     address { Faker::Address.full_address }
     description { Faker::Lorem.paragraph }
     score { 5.0 }
-    category
+    category_list { %w[restaurant bar] }
   end
 end

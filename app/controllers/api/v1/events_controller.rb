@@ -13,7 +13,11 @@ module Api
       before_action :allowed_to_create?, only: %i[create]
 
       def index
-        render json: events, each_serializer: EventSerializer, status: :ok
+        if params[:category_list] and params[:category_list].any?
+          render json: filtered_events, each_serializer: EventSerializer, status: :ok
+        else
+          render json: events, each_serializer: EventSerializer, status: :ok
+        end
       end
 
       def show
@@ -90,7 +94,11 @@ module Api
       private
 
       def events
-        Event.all.includes(%i[category images_attachments cover_attachment]).page(params[:page]).per(10)
+        Event.all.includes(%i[category images_attachments cover_attachment taggings]).page(params[:page]).per(10)
+      end
+
+      def filtered_events
+        Event.tagged_with(params[:category_list], params[:match].to_sym => true).includes(%i[cover_attachment thumbnails_attachments taggings]).page(params[:page]).per(10)
       end
 
       def event
@@ -112,7 +120,7 @@ module Api
       end
 
       def event_params
-        params.require(:event).permit(:name, :description, :location, :category_id, :start_date, :end_date, :cover, images: [])
+        params.require(:event).permit(:name, :description, :location, :category_list, :start_date, :end_date, :cover, images: [])
       end
     end
   end

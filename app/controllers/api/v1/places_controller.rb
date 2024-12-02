@@ -10,10 +10,11 @@ module Api
       before_action :editor?, only: %i[create edit update destroy]
 
       def index
-        options = {
-          include: [:category]
-        }
-        render json: places, each_serializer: PlaceSerializer, status: :ok
+        if params[:category_list] and params[:category_list].any?
+          render json: filtered_places, each_serializer: PlaceSerializer, status: :ok
+        else
+          render json: places, each_serializer: PlaceSerializer, status: :ok
+        end
       end
 
       def show
@@ -32,9 +33,6 @@ module Api
 
         if new_place.save
           current_user.add_role :creator, new_place
-          options = {
-            include: [:category]
-          }
           render json: new_place, serializer: PlaceSerializer, status: :created
         else
           render json: { error: 'Error creating place' }, status: :unprocessable_entity
@@ -43,9 +41,6 @@ module Api
 
       def update
         if place.update(place_params)
-          options = {
-            include: [:category]
-          }
           render json: place, serializer: PlaceSerializer, status: :ok
         else
           render json: { error: 'Error updating place' }, status: :unprocessable_entity
@@ -63,7 +58,11 @@ module Api
       private
 
       def places
-        Place.all.includes(%i[cover_attachment thumbnails_attachments category]).page(params[:page]).per(10)
+        Place.all.includes(%i[cover_attachment thumbnails_attachments taggings]).page(params[:page]).per(10)
+      end
+
+      def filtered_places
+        Place.tagged_with(params[:category_list], params[:match].to_sym => true).includes(%i[cover_attachment thumbnails_attachments taggings]).page(params[:page]).per(10)
       end
 
       def place
@@ -76,7 +75,7 @@ module Api
       end
 
       def place_params
-        params.require(:place).permit(:name, :description, :address, :category_id, :cover, thumbnails: [])
+        params.require(:place).permit(:name, :description, :address, :category_list, :cover, thumbnails: [])
       end
     end
   end

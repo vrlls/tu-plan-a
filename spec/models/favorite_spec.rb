@@ -6,6 +6,11 @@ RSpec.describe Favorite do
   describe 'associations' do
     subject { create(:favorite) }
 
+    before do
+      create(:category)
+      subject
+    end
+
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:place) }
   end
